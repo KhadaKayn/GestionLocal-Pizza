@@ -1,0 +1,117 @@
+{% extends 'sitio1/base.html' %}
+{% load static %}
+{% block js %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+{% endblock %}
+
+
+{% block css %}
+    <style>
+        body {
+            background-image: url("{% static 'sitio1/imagenes/FondoVADmin.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        table {
+            width: 80%;
+            margin: 10px 0;
+        }
+
+        th, td {
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-primary:hover, .btn-danger:hover {
+            filter: brightness(90%);
+        }
+
+        .btn-add, .btn-back {
+            margin-top: 20px;
+        }
+        .btn-back {
+        background-color: #828282; 
+        border-color: #808080;
+        }
+        .btn-back:hover {
+        background-color: #ff0000; 
+        color: #000000; 
+        }
+        .btn-add {
+        background-color: rgb(0, 230, 0);
+        border-color: rgb(179, 177, 177);
+        }
+        .btn-add:hover {
+        background-color: #ffffff; 
+        color: #000000; 
+        }
+        .credit {
+            color: white;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    {% if datos %}
+        <table class="table table-bordered table-dark">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Disponible</th>
+                    <th>Precio</th>
+                    <th>Oferta</th>
+                    <th>Descuento</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+                <tbody>
+                    {% for u in datos %}
+                        <tr>
+                            <td>{{ u.nombre }}</td>
+                            <td>{% if u.disponible %}Sí{% else %}No{% endif %}</td>
+                            <td>{{ u.precio }}</td>
+                            <td>{% if u.oferta %}Sí{% else %}No{% endif %}</td>
+                            {% if u.oferta %}
+                                <td>{{ u.descuento }}%</td>
+                            {% else %}
+                                <td>No aplica</td>
+                            {% endif %}
+                            <td>
+                                <a href="{% url 'editar_tamanos' u.id %}" class="btn btn-primary">Editar</a>
+                                <form action="{% url 'eliminar_tamanos' u.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro que deseas eliminar este Dato?')">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+        </table>
+    {% endif %}
+
+        <a href="{% url 'ingresar_tamanos' %}" class="btn btn-primary btn-add">Ingresar un Tamaño</a>
+        
+        <a href="{% url 'vista_administrador' %}" class="btn btn-primary btn-back">Atrás</a>
+
+{% endblock %}
